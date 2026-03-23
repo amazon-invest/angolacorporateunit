@@ -1,0 +1,90 @@
+</html>
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microsoft Hub - Angola</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .ms-gradient { background: linear-gradient(135deg, #0078D4 0%, #005A9E 100%); }
+        .screen { display: none; }
+        .active-screen { display: block; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <div id="login-screen" class="fixed inset-0 z-[100] ms-gradient flex items-center justify-center p-6">
+        <div class="bg-white w-full max-w-sm rounded-[2rem] p-8 shadow-2xl text-center">
+            <i class="fab fa-microsoft text-blue-600 text-5xl mb-4"></i>
+            <h2 class="text-xl font-black mb-6">Microsoft Hub AO</h2>
+            <input type="number" id="uid" placeholder="Telemóvel" class="w-full p-4 bg-slate-50 border rounded-xl mb-3 outline-none font-bold">
+            <input type="password" id="upass" placeholder="Senha (8 dígitos)" class="w-full p-4 bg-slate-50 border rounded-xl mb-6 outline-none font-bold">
+            <button onclick="handleAuth()" class="w-full py-4 ms-gradient text-white font-black rounded-xl shadow-lg uppercase">Aceder Conta</button>
+            <p onclick="toggleAuthMode()" id="auth-toggle" class="mt-4 text-xs font-bold text-slate-400 cursor-pointer uppercase">Não tem conta? Registe-se</p>
+        </div>
+    </div>
+
+    <div id="main-app" class="hidden min-h-screen pb-24">
+        <header class="bg-white p-5 border-b sticky top-0 z-50 flex justify-between items-center shadow-sm">
+            <div class="font-black text-blue-700">MS HUB AO</div>
+            <div id="u-display" class="text-[10px] font-black bg-blue-100 text-blue-700 px-3 py-1 rounded-full uppercase">ID: ---</div>
+        </header>
+
+        <main class="p-4">
+            <div id="sc-home" class="screen active-screen">
+                <div class="ms-gradient rounded-[2rem] p-8 text-white shadow-xl mb-6 text-center">
+                    <p class="text-[10px] font-bold opacity-70 uppercase">Saldo de Investimento</p>
+                    <h1 id="balance" class="text-4xl font-black my-2">0,00 KZ</h1>
+                    <span id="vip-status" class="text-[9px] font-black bg-black/10 px-4 py-1 rounded-full uppercase">Nenhum VIP Ativo</span>
+                </div>
+
+                <div class="grid grid-cols-4 gap-2 mb-8 text-center font-black">
+                    <div onclick="show('sc-dep')" class="bg-white p-3 rounded-xl shadow-sm"><i class="fas fa-university text-blue-600"></i><p class="text-[8px] mt-1 uppercase">Depósito</p></div>
+                    <div onclick="show('sc-wit')" class="bg-white p-3 rounded-xl shadow-sm"><i class="fas fa-wallet text-orange-500"></i><p class="text-[8px] mt-1 uppercase">Saque</p></div>
+                    <div onclick="show('sc-iban')" class="bg-white p-3 rounded-xl shadow-sm"><i class="fas fa-id-card text-green-600"></i><p class="text-[8px] mt-1 uppercase">IBAN</p></div>
+                    <div onclick="show('sc-team')" class="bg-white p-3 rounded-xl shadow-sm"><i class="fas fa-users text-purple-600"></i><p class="text-[8px] mt-1 uppercase">Equipa</p></div>
+                </div>
+
+                <div class="bg-white rounded-2xl p-4 shadow-sm border">
+                    <h3 class="font-black text-[10px] mb-4 text-slate-400 border-b pb-2 uppercase tracking-widest">Planos de Rendimento (3.3%)</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-[10px] text-center font-bold">
+                            <thead class="text-slate-300"><tr><th class="text-left py-2">NÍVEL</th><th>DIA</th><th>MÊS</th><th>AÇÃO</th></tr></thead>
+                            <tbody id="v-rows"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            </main>
+
+        <nav class="fixed bottom-0 left-0 right-0 bg-white border-t p-4 flex justify-around shadow-2xl z-50">
+            <button onclick="show('sc-home')" class="text-2xl text-blue-600"><i class="fas fa-home"></i></button>
+            <button onclick="window.location.href='https://wa.me/244929520327'" class="text-2xl text-slate-400"><i class="fab fa-whatsapp"></i></button>
+            <button onclick="logout()" class="text-2xl text-red-400"><i class="fas fa-power-off"></i></button>
+        </nav>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, set, get, onValue, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        // CONFIGURAÇÃO DO FIREBASE
+        const firebaseConfig = {
+            apiKey: "COLE_AQUI",
+            authDomain: "seu-projeto.firebaseapp.com",
+            databaseURL: "https://seu-projeto-default-rtdb.firebaseio.com",
+            projectId: "seu-projeto",
+            storageBucket: "seu-projeto.appspot.com",
+            appId: "seu-id"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // Funções de Autenticação, Rendimento 3.3% e Bónus de Rede 10%/4%/1% aqui...
+        // (Aquelas que discutimos anteriormente)
+    </script>
+</body>
+</html>
