@@ -1,271 +1,228 @@
 <!DOCTYPE html>
-<html lang="pt-pt">
+<html lang="pt-AO">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chevron Admin | Painel Central</title>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <title>SafeKwanza | PAINEL MASTER</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
     <style>
-        :root { --ch-blue: #0054a6; --ch-red: #ed1c24; --success: #28a745; --bg: #f4f7f6; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { background: var(--bg); padding: 15px; }
-        
-        /* TELA DE LOGIN ADMIN */
-        #adminLock { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: var(--ch-blue); z-index: 9999; display: flex; 
-            align-items: center; justify-content: center; flex-direction: column; color: white;
-        }
-        .lock-card { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 350px; text-align: center; color: #333; }
-
-        /* PAINEL (ESCONDIDO POR PADRÃO) */
-        #adminContent { display: none; }
-
-        .header { background: var(--ch-blue); color: white; padding: 20px; border-radius: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
-        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
-        h2 { color: var(--ch-blue); font-size: 14px; text-transform: uppercase; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 5px; }
-        input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; margin-bottom: 10px; outline: none; font-size: 14px; }
-        .btn { padding: 12px; border: none; border-radius: 10px; color: white; font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 12px; }
-        .btn-blue { background: var(--ch-blue); width: 100%; }
-        .btn-green { background: var(--success); flex: 1; }
-        .btn-red { background: var(--ch-red); flex: 1; }
-        .btn-black { background: #333; width: 100%; margin-top: 5px; }
-        
-        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .info-item { background: #f9f9f9; padding: 8px; border-radius: 8px; border: 1px solid #eee; }
-        .info-item label { display: block; font-size: 9px; color: #888; font-weight: bold; }
-        .info-item span { font-size: 13px; font-weight: 700; }
-        
-        .user-row { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #eee; font-size: 13px; cursor: pointer; align-items: center; }
-        .user-row:hover { background: #f0f7ff; }
-        .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 5px; }
-
-        .pending-card { background: white; border: 1px solid #eee; padding: 15px; border-radius: 12px; margin-bottom: 15px; border-top: 4px solid var(--ch-red); }
-        .pending-card img { width: 100%; max-height: 250px; object-fit: contain; border-radius: 8px; margin: 10px 0; background: #eee; cursor: pointer; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; background: #020617; color: #f8fafc; }
+        .admin-card { background: #0f172a; border-radius: 30px; border: 1px solid #1e293b; padding: 25px; }
+        .status-badge { font-[900] text-[8px] uppercase px-2 py-1 rounded-lg italic; }
+        #lockScreen { position: fixed; inset: 0; background: #020617; z-index: 9999; display: flex; align-items: center; justify-content: center; p: 20px; }
     </style>
 </head>
-<body>
+<body class="p-4 md:p-10">
 
-    <div id="adminLock">
-        <div class="lock-card">
-            <h2 style="border:none;">🔒 ACESSO RESTRITO</h2>
-            <p style="font-size: 12px; margin-bottom: 15px; color: #666;">Introduza a chave mestre para continuar</p>
-            <input type="password" id="masterKey" placeholder="Senha do Administrador">
-            <button class="btn btn-blue" onclick="verificarAcesso()">ENTRAR NO PAINEL</button>
+    <div id="lockScreen">
+        <div class="w-full max-w-sm text-center">
+            <h1 class="text-2xl font-black italic text-[#0052FF] mb-6">SISTEMA <span class="text-white">BLOQUEADO</span></h1>
+            <input type="password" id="masterKey" placeholder="Insira a Chave de Acesso" class="w-full p-5 rounded-2xl bg-slate-900 border border-slate-700 font-bold text-center outline-none focus:border-blue-500 text-white mb-4">
+            <button onclick="checkLock()" class="w-full bg-blue-600 p-5 rounded-2xl font-black uppercase italic hover:bg-blue-700 transition-all">Desbloquear Painel</button>
         </div>
     </div>
 
-    <div id="adminContent">
-        <div class="header">
-            <div><strong>CHEVRON ADMIN CLOUD</strong><br><small>Painel de Controlo Angola</small></div>
-            <div style="text-align:right;"><small>TOTAL CLIENTES</small><br><strong id="countU">0</strong></div>
-        </div>
-
-        <div class="card">
-            <h2>🔍 Gestão de Conta</h2>
-            <div style="display:flex; gap:5px;">
-                <input type="number" id="inpSearch" placeholder="Número (ex: 943692688)">
-                <button class="btn btn-blue" style="width:80px;" onclick="buscar()">BUSCAR</button>
+    <div id="mainContent" style="display: none;">
+        <header class="max-w-6xl mx-auto mb-10 flex flex-col md:flex-row justify-between items-center gap-6 border-b border-slate-800 pb-8 text-center md:text-left">
+            <div>
+                <h1 class="text-3xl font-black italic tracking-tighter uppercase text-[#0052FF]">SAFE<span class="text-white">CONTROL</span> <span class="text-[10px] bg-red-600 text-white px-2 py-1 rounded ml-2 italic text-center">MASTER</span></h1>
+                <p class="text-[9px] text-slate-500 font-bold uppercase tracking-[0.3em] italic">Gestão de Ativos SafeKwanza</p>
             </div>
-            
-            <div id="painelUser" style="display:none; margin-top:15px; padding-top:15px; border-top: 1px dashed #ccc;">
-                <div class="info-grid">
-                    <div class="info-item"><label>SALDO ATUAL</label><span id="resSaldo">0 Kz</span></div>
-                    <div class="info-item"><label>CONVIDADOS</label><span id="resConvidados">0 Membros</span></div>
-                    <div class="info-item"><label>ESTADO</label><span id="resStatus">Ativo</span></div>
-                    <div class="info-item"><label>IBAN REGISTADO</label><span id="resIban">Nenhum</span></div>
-                </div>
+            <button onclick="location.reload()" class="bg-slate-800 px-6 py-3 rounded-2xl text-[10px] font-black uppercase italic hover:bg-slate-700 transition-all">Atualizar Painel</button>
+        </header>
 
-                <label style="font-size: 11px; font-weight: bold; color: var(--ch-blue);">AJUSTAR SALDO:</label>
-                <input type="number" id="valAjuste" placeholder="Valor Kwanza">
-                <div style="display:flex; gap:5px; margin-bottom: 15px;">
-                    <button class="btn btn-green" onclick="ajustar('add')">ADICIONAR (+)</button>
-                    <button class="btn btn-red" onclick="ajustar('sub')">REMOVER (-)</button>
-                </div>
+        <main class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div class="lg:col-span-4 space-y-6">
+                <div class="admin-card">
+                    <h3 class="text-[10px] font-black uppercase text-blue-400 mb-6 italic tracking-widest">Pesquisar Terminal</h3>
+                    <div class="flex gap-2 mb-6">
+                        <input type="tel" id="searchPhone" placeholder="Terminal (9xxxxxxxx)" class="flex-1 p-4 rounded-2xl bg-slate-900 border border-slate-700 font-bold text-sm outline-none focus:border-blue-500 text-white">
+                        <button onclick="searchUser()" class="bg-blue-600 px-5 rounded-2xl hover:bg-blue-700 transition-all text-white font-bold">BUSCAR</button>
+                    </div>
 
-                <label style="font-size: 11px; font-weight: bold; color: var(--ch-blue);">SEGURANÇA E ACESSO:</label>
-                <input type="text" id="newPass" placeholder="Nova Senha">
-                <button class="btn btn-blue" onclick="mudarSenha()">ATUALIZAR SENHA</button>
-                <button id="btnBlock" class="btn btn-black" onclick="toggleBlock()">BLOQUEAR USUÁRIO</button>
+                    <div id="userProfile" class="hidden space-y-5">
+                        <div class="p-5 bg-black/40 rounded-2xl border border-slate-800">
+                            <p id="uStatus" class="font-black italic text-[10px] uppercase mb-4"></p>
+                            <div class="space-y-4">
+                                <div>
+                                    <p class="text-[8px] font-black text-slate-500 uppercase mb-1 italic">Palavra-Passe:</p>
+                                    <div class="flex gap-2">
+                                        <input type="text" id="uPassView" class="w-full p-2 text-xs font-mono font-black rounded-lg border-none bg-slate-800 text-white">
+                                        <button onclick="updatePass()" class="bg-blue-600 text-[8px] font-black px-3 rounded-lg uppercase">Alterar</button>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-end border-t border-slate-800 pt-4">
+                                    <div>
+                                        <p class="text-[8px] font-black text-slate-500 uppercase">Saldo Atual</p>
+                                        <p id="uBalance" class="text-2xl font-black italic text-white">0,00 Kz</p>
+                                    </div>
+                                    <button id="banBtn" onclick="toggleBan()" class="text-[8px] font-black px-4 py-2 rounded-xl uppercase"></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <input type="number" id="admAmount" placeholder="Valor (Kz)" class="w-full p-4 rounded-2xl bg-slate-900 border border-slate-700 font-bold text-sm text-white">
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="adjustBalance('add')" class="bg-emerald-600 p-3 rounded-xl font-black text-[9px] uppercase italic">Add Saldo</button>
+                                <button onclick="adjustBalance('rem')" class="bg-red-600 p-3 rounded-xl font-black text-[9px] uppercase italic">Remover</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="noUser" class="py-12 text-center text-slate-600 italic text-xs uppercase font-black">Aguardando Terminal...</div>
+                </div>
             </div>
-        </div>
 
-        <div class="card">
-            <h2 style="border-bottom-color: var(--success);">📥 Depósitos Pendentes</h2>
-            <div id="listaRecargas"></div>
-        </div>
+            <div class="lg:col-span-8">
+                <div class="admin-card min-h-[500px]">
+                    <div class="flex justify-between items-center mb-8 border-b border-slate-800 pb-4">
+                        <h2 class="text-[11px] font-black uppercase italic tracking-widest text-white">Pedidos Pendentes</h2>
+                        <span id="pendingCount" class="bg-blue-600 text-[9px] font-black px-4 py-1 rounded-full uppercase italic">0 Pedidos</span>
+                    </div>
+                    <div id="adminQueue" class="space-y-4"></div>
+                </div>
+            </div>
+        </main>
+    </div>
 
-        <div class="card">
-            <h2 style="border-bottom-color: orange;">💸 Pedidos de Saque</h2>
-            <div id="listaSaques"></div>
-        </div>
-
-        <div class="card">
-            <h2>👥 Lista de Clientes</h2>
-            <div id="todosUsers" style="max-height: 300px; overflow-y: auto; border: 1px solid #eee; border-radius: 10px;"></div>
-        </div>
+    <div id="photoModal" onclick="this.style.display='none'" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:9999; align-items:center; justify-content:center; padding:20px; cursor:pointer;">
+        <img id="imgFull" src="" style="max-width:100%; max-height:85vh; border:3px solid #0052FF; border-radius:20px;">
     </div>
 
     <script>
+        // SISTEMA DE SEGURANÇA
+        function checkLock() {
+            const key = document.getElementById('masterKey').value;
+            if(key === "ABS..943") {
+                document.getElementById('lockScreen').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+            } else {
+                alert("CHAVE DE ACESSO INCORRETA!");
+            }
+        }
+
+        // CONFIGURAÇÃO FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyC3SurEz7aLcHG4yBUq5zrGBPOb2mvLpZ4",
             authDomain: "fir-6e9ec.firebaseapp.com",
             databaseURL: "https://fir-6e9ec-default-rtdb.firebaseio.com",
-            projectId: "fir-6e9ec"
+            projectId: "fir-6e9ec",
+            storageBucket: "fir-6e9ec.firebasestorage.app",
+            messagingSenderId: "579697818964",
+            appId: "1:579697818964:web:aad151fcbe3989df431cc1"
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-        let target = "";
-        let isBlocked = false;
 
-        // VERIFICAÇÃO DE SENHA MESTRE
-        function verificarAcesso() {
-            const pass = document.getElementById('masterKey').value;
-            if(pass === "ABS..943") {
-                document.getElementById('adminLock').style.display = 'none';
-                document.getElementById('adminContent').style.display = 'block';
-                iniciarMonitoramento();
-            } else {
-                alert("❌ Chave de Acesso Incorreta!");
-            }
+        let allUsers = {};
+        let selectedUserPhone = null;
+
+        db.ref('users').on('value', (snapshot) => {
+            allUsers = snapshot.val() || {};
+            renderQueue();
+            if(selectedUserPhone) updateProfileView();
+        });
+
+        function searchUser() {
+            const phone = document.getElementById('searchPhone').value;
+            if(!allUsers[phone]) return alert("Usuário não encontrado!");
+            selectedUserPhone = phone;
+            updateProfileView();
         }
 
-        function iniciarMonitoramento() {
-            monitorarUsuarios(); monitorarRecargas(); monitorarSaques();
+        function updateProfileView() {
+            const u = allUsers[selectedUserPhone];
+            document.getElementById('noUser').classList.add('hidden');
+            document.getElementById('userProfile').classList.remove('hidden');
+            const uStatus = document.getElementById('uStatus');
+            uStatus.innerText = u.isBanned ? "CONTA BLOQUEADA" : "CONTA ATIVA";
+            uStatus.className = `font-black italic text-[10px] uppercase ${u.isBanned ? 'text-red-500' : 'text-emerald-500'}`;
+            const bBtn = document.getElementById('banBtn');
+            bBtn.innerText = u.isBanned ? "DESBLOQUEAR" : "BANIR CONTA";
+            bBtn.className = u.isBanned ? "bg-emerald-600 text-white text-[8px] font-black px-4 py-2 rounded-xl uppercase shadow-lg" : "bg-red-600/20 text-red-500 border border-red-500/30 text-[8px] font-black px-4 py-2 rounded-xl uppercase";
+            document.getElementById('uPassView').value = u.pass;
+            document.getElementById('uBalance').innerText = (u.balance || 0).toLocaleString('pt-AO', {minimumFractionDigits: 2}) + " Kz";
         }
 
-        function monitorarUsuarios() {
-            db.ref('contas').on('value', (snapshot) => {
-                const data = snapshot.val();
-                const tU = document.getElementById('todosUsers');
-                tU.innerHTML = "";
-                let count = 0;
-                if (data) {
-                    for (let tel in data) {
-                        count++;
-                        let user = data[tel];
-                        let corStatus = user.bloqueado ? 'red' : 'var(--success)';
-                        tU.innerHTML += `<div class="user-row" onclick="selecionar('${tel}')">
-                            <span><i class="status-dot" style="background:${corStatus}"></i> +244 ${tel}</span>
-                            <strong>${parseFloat(user.saldo || 0).toLocaleString()} Kz</strong>
-                        </div>`;
-                    }
-                }
-                document.getElementById('countU').innerText = count;
-            });
-        }
-
-        function buscar() {
-            target = document.getElementById('inpSearch').value.trim();
-            if(!target) return;
-            db.ref('contas/' + target).once('value').then(s => {
-                const u = s.val();
-                if (u) {
-                    document.getElementById('painelUser').style.display = 'block';
-                    document.getElementById('resSaldo').innerText = parseFloat(u.saldo || 0).toLocaleString() + " Kz";
-                    document.getElementById('newPass').value = u.senha;
-                    db.ref('contas').once('value').then(all => {
-                        let convidados = 0;
-                        all.forEach(child => { if(child.val().padrinho === target) convidados++; });
-                        document.getElementById('resConvidados').innerText = convidados + " Membros";
-                    });
-                    isBlocked = u.bloqueado || false;
-                    document.getElementById('resStatus').innerText = isBlocked ? "BLOQUEADO" : "ATIVO";
-                    document.getElementById('resStatus').style.color = isBlocked ? "red" : "green";
-                    document.getElementById('btnBlock').innerText = isBlocked ? "DESBLOQUEAR USUÁRIO" : "BLOQUEAR USUÁRIO";
-                    document.getElementById('btnBlock').style.background = isBlocked ? "var(--success)" : "#333";
-                    if(u.historico_saques) {
-                        let lastS = Object.values(u.historico_saques).pop();
-                        document.getElementById('resIban').innerText = lastS.iban || "Nenhum";
-                    } else { document.getElementById('resIban').innerText = "Sem registos"; }
-                } else alert("Usuário não encontrado!");
-            });
-        }
-
-        function ajustar(tipo) {
-            let v = parseFloat(document.getElementById('valAjuste').value);
-            if (!v || !target) return alert("Erro no valor!");
-            db.ref('contas/' + target + '/saldo').once('value').then(s => {
-                let novo = tipo === 'add' ? (parseFloat(s.val()) + v) : (parseFloat(s.val()) - v);
-                db.ref('contas/' + target + '/saldo').set(novo);
-                alert("Saldo Ajustado!");
-                buscar();
-            });
-        }
-
-        function mudarSenha() {
-            let p = document.getElementById('newPass').value;
-            db.ref('contas/' + target + '/senha').set(p);
-            alert("Senha atualizada!");
-        }
-
-        function toggleBlock() {
-            db.ref('contas/' + target + '/bloqueado').set(!isBlocked);
-            buscar();
-        }
-
-        function selecionar(t) { document.getElementById('inpSearch').value = t; buscar(); }
-
-        function monitorarRecargas() {
-            db.ref('pendencias/recargas').on('value', snap => {
-                const list = document.getElementById('listaRecargas');
-                list.innerHTML = "";
-                const data = snap.val();
-                if (!data) return list.innerHTML = "<p style='font-size:11px; color:#999;'>Sem depósitos pendentes.</p>";
-                for (let id in data) {
-                    let r = data[id];
-                    list.innerHTML += `<div class="pending-card" style="border-top-color:var(--success)">
-                        <strong>+244 ${r.tel}</strong> | Valor: ${parseFloat(r.valor).toLocaleString()} Kz
-                        <img src="${r.foto}" onclick="window.open(this.src)">
-                        <div style="display:flex; gap:5px;">
-                            <button class="btn btn-green" onclick="decidirR('${id}', '${r.tel}', ${r.valor}, 'ok')">APROVAR</button>
-                            <button class="btn btn-red" onclick="decidirR('${id}', '', 0, 'no')">REJEITAR</button>
-                        </div>
-                    </div>`;
-                }
-            });
-        }
-
-        function monitorarSaques() {
-            db.ref('pendencias/saques').on('value', snap => {
-                const list = document.getElementById('listaSaques');
-                list.innerHTML = "";
-                const data = snap.val();
-                if (!data) return list.innerHTML = "<p style='font-size:11px; color:#999;'>Sem saques pendentes.</p>";
-                for (let id in data) {
-                    let s = data[id];
-                    list.innerHTML += `<div class="pending-card" style="border-top-color: orange;">
-                        <strong>SAQUE: +244 ${s.tel}</strong><br>
-                        <span style="font-size:11px;">IBAN: <b>${s.iban}</b></span><br>
-                        <span>Pagar: <b style="color:var(--success)">${parseFloat(s.valor).toLocaleString()} Kz</b></span>
-                        <div style="display:flex; gap:5px; margin-top:10px;">
-                            <button class="btn btn-green" onclick="finalizarSaque('${id}', 'pago', '${s.tel}')">PAGO</button>
-                            <button class="btn btn-red" onclick="finalizarSaque('${id}', 'rejeitar', '${s.tel}', ${s.valorBruto})">REJEITAR</button>
-                        </div>
-                    </div>`;
-                }
-            });
-        }
-
-        function decidirR(id, tel, valor, acao) {
-            if (acao === 'ok') {
-                db.ref('contas/' + tel + '/saldo').once('value').then(s => {
-                    db.ref('contas/' + tel + '/saldo').set(parseFloat(s.val() || 0) + valor);
+        function adjustBalance(type) {
+            const valInput = document.getElementById('admAmount');
+            const val = parseFloat(valInput.value);
+            if (!val || val <= 0) return alert("Insira um valor válido.");
+            const currentBalance = parseFloat(allUsers[selectedUserPhone].balance) || 0;
+            const newBalance = type === 'add' ? currentBalance + val : currentBalance - val;
+            db.ref(`users/${selectedUserPhone}/balance`).set(newBalance).then(() => {
+                const hId = "adm" + Date.now();
+                db.ref(`users/${selectedUserPhone}/history/${hId}`).set({
+                    type: 'Ajuste Master', val: val, date: new Date().toLocaleString(), status: 'CONCLUÍDO'
                 });
-            }
-            db.ref('pendencias/recargas/' + id).remove();
+                valInput.value = "";
+                alert("Carteira Atualizada!");
+            });
         }
 
-        function finalizarSaque(id, acao, tel, valorBruto) {
-            if (acao === 'rejeitar') {
-                db.ref('contas/' + tel + '/saldo').once('value').then(s => {
-                    db.ref('contas/' + tel + '/saldo').set(parseFloat(s.val() || 0) + valorBruto);
+        function renderQueue() {
+            const queue = document.getElementById('adminQueue');
+            const pendingList = [];
+            Object.keys(allUsers).forEach(phone => {
+                const u = allUsers[phone];
+                if(u.history) Object.keys(u.history).forEach(hId => {
+                    const op = u.history[hId];
+                    if(op.status === 'PENDENTE' || op.status === 'PROCESSANDO') pendingList.push({ ...op, phone, hId });
                 });
+            });
+            document.getElementById('pendingCount').innerText = `${pendingList.length} Pendentes`;
+            if(pendingList.length === 0) {
+                queue.innerHTML = `<div class="text-center py-20 text-slate-600 italic text-xs font-black uppercase">Nenhum pedido pendente.</div>`;
+                return;
             }
-            db.ref('contas/'+tel+'/historico_saques/'+id+'/status').set(acao === 'pago' ? "Pago" : "Rejeitado");
-            db.ref('pendencias/saques/' + id).remove();
+            queue.innerHTML = pendingList.map(op => `
+                <div class="bg-slate-900/60 p-6 rounded-[35px] border border-slate-800 flex flex-col md:flex-row justify-between gap-6 shadow-2xl">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="status-badge ${op.type.includes('Depósito') ? 'bg-emerald-400/10 text-emerald-400' : 'bg-red-400/10 text-red-400'}">${op.type}</span>
+                            <span class="text-[9px] text-slate-500 font-bold">${op.date}</span>
+                        </div>
+                        <p class="text-3xl font-black italic text-white">${op.val.toLocaleString()} Kz</p>
+                        <p class="text-[9px] font-bold text-blue-500 uppercase mt-2 italic">Terminal: ${op.phone}</p>
+                        ${op.proof ? `<button onclick="showPhoto('${op.proof}')" class="mt-4 w-full bg-blue-600/10 text-blue-400 border border-blue-400/30 p-4 rounded-2xl text-[9px] font-black uppercase italic">Ver Comprovativo</button>` : ''}
+                    </div>
+                    <div class="flex flex-row md:flex-col gap-2">
+                        <button onclick="approveOp('${op.phone}', '${op.hId}')" class="flex-1 bg-emerald-600 px-8 py-4 rounded-2xl font-black text-[10px] uppercase italic">Aprovar</button>
+                        <button onclick="rejectOp('${op.phone}', '${op.hId}')" class="flex-1 bg-red-600/20 text-red-500 border border-red-500/30 px-8 py-4 rounded-2xl font-black text-[10px] uppercase italic">Rejeitar</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function approveOp(phone, hId) {
+            const op = allUsers[phone].history[hId];
+            let balance = parseFloat(allUsers[phone].balance) || 0;
+            if(op.type.includes('Depósito')) balance += op.val;
+            db.ref(`users/${phone}/balance`).set(balance);
+            db.ref(`users/${phone}/history/${hId}/status`).set('CONCLUÍDO');
+        }
+
+        function rejectOp(phone, hId) {
+            const op = allUsers[phone].history[hId];
+            let balance = parseFloat(allUsers[phone].balance) || 0;
+            if(op.type.includes('Saque')) balance += (op.bruto || op.val);
+            db.ref(`users/${phone}/balance`).set(balance);
+            db.ref(`users/${phone}/history/${hId}/status`).set('REJEITADO');
+        }
+
+        function toggleBan() { db.ref(`users/${selectedUserPhone}/isBanned`).set(!allUsers[selectedUserPhone].isBanned); }
+        function updatePass() {
+            const pass = document.getElementById('uPassView').value;
+            if(pass.length < 4) return alert("Senha curta!");
+            db.ref(`users/${selectedUserPhone}/pass`).set(pass).then(() => alert("Senha Atualizada!"));
+        }
+        function showPhoto(b64) {
+            document.getElementById('imgFull').src = b64;
+            document.getElementById('photoModal').style.display = 'flex';
         }
     </script>
 </body>
-</html>
+                </html>
