@@ -2,106 +2,99 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <title>TESLA - Master System</title>
+    <title>TESLA - Oficial</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
-        body { background-color: #f8fafc; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
+        body { background-color: #f8fafc; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
         .tesla-orange { color: #FF6B00; }
         .bg-tesla-orange { background-color: #FF6B00; }
-        .glass-card { background: #ffffff; border: 1px solid rgba(0, 0, 0, 0.05); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03); }
-        .glass-input { background: #fdfdfd; border: 1px solid #e2e8f0; text-align: center; font-weight: bold; }
+        .glass-card { background: #ffffff; border: 1px solid rgba(0, 0, 0, 0.05); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03); }
         .hidden { display: none !important; }
         .auth-tab-active { border-bottom: 3px solid #FF6B00; color: #1e293b; font-weight: 900; }
-        
-        .wpp-float { position: fixed; bottom: 100px; right: 20px; width: 60px; height: 60px; background-color: #25d366; color: white; border-radius: 50px; text-align: center; font-size: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); z-index: 1000; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: 0.3s; }
-
-        #notification-container { position: fixed; top: 20px; right: 20px; z-index: 9999; }
-        .notification { animation: slideIn 0.4s ease-out; background: white; padding: 16px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-left: 5px solid #FF6B00; font-size: 11px; font-weight: 800; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
-        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+        #notification-container { position: fixed; top: 10px; right: 10px; left: 10px; z-index: 9999; }
+        .notification { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-left: 5px solid #FF6B00; font-size: 11px; font-weight: 800; margin-bottom: 8px; animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        button:active { transform: scale(0.96); transition: 0.1s; }
     </style>
 </head>
 <body>
 
-    <a href="https://chat.whatsapp.com/FT5dtVq275NLBwEfsdeGDn" class="wpp-float" target="_blank">
-        <i class="fab fa-whatsapp"></i>
-    </a>
-
     <div id="notification-container"></div>
 
     <div id="auth-portal" class="flex items-center justify-center min-h-screen p-6">
-        <div class="w-full max-w-md glass-card rounded-[2.5rem] overflow-hidden">
-            <div class="pt-12 pb-6 text-center">
-                <h1 class="text-4xl font-black tesla-orange uppercase italic">Tesla</h1>
-                <p id="ref-status" class="text-[8px] font-bold text-emerald-500 uppercase mt-2 hidden">Convidado por: <span id="referrer-id"></span></p>
+        <div class="w-full max-sm glass-card rounded-[2.5rem] overflow-hidden">
+            <div class="pt-10 pb-4 text-center">
+                <h1 class="text-3xl font-black tesla-orange uppercase italic">Tesla</h1>
             </div>
             <div class="flex border-b border-zinc-100 text-center">
-                <button id="tab-login" class="flex-1 py-5 text-zinc-400 font-bold text-[10px] uppercase">Entrar</button>
-                <button id="tab-register" class="flex-1 py-5 auth-tab-active text-[10px] uppercase">Registo</button>
+                <button id="tab-login" class="flex-1 py-4 text-zinc-400 font-bold text-[10px] uppercase">Entrar</button>
+                <button id="tab-register" class="flex-1 py-4 auth-tab-active text-[10px] uppercase">Registo</button>
             </div>
-            <div class="p-8 space-y-4">
-                <input type="tel" id="auth-contact" placeholder="Número Telemóvel" class="w-full py-5 glass-input rounded-2xl text-sm outline-none">
-                <input type="password" id="auth-pass" placeholder="Senha" class="w-full py-5 glass-input rounded-2xl text-sm outline-none">
+            <div class="p-6 space-y-3">
+                <input type="tel" id="auth-contact" placeholder="Número Telemóvel" class="w-full p-4 bg-zinc-50 border rounded-xl text-center font-bold">
+                <input type="password" id="auth-pass" placeholder="Senha" class="w-full p-4 bg-zinc-50 border rounded-xl text-center font-bold">
                 <div id="confirm-pass-container">
-                    <input type="password" id="auth-confirm-pass" placeholder="Confirmar Senha" class="w-full py-5 glass-input rounded-2xl text-sm outline-none">
+                    <input type="password" id="auth-confirm-pass" placeholder="Confirmar Senha" class="w-full p-4 bg-zinc-50 border rounded-xl text-center font-bold">
                 </div>
-                <button id="auth-main-btn" class="w-full bg-tesla-orange text-white font-black py-5 rounded-2xl uppercase text-[11px] mt-4">Confirmar</button>
+                <button id="auth-main-btn" class="w-full bg-tesla-orange text-white font-black py-4 rounded-xl uppercase text-[11px] mt-2 shadow-md">Confirmar</button>
             </div>
         </div>
     </div>
 
-    <div id="main-app" class="hidden pb-32">
-        <header class="p-8 flex justify-between items-center">
-            <h1 class="text-2xl font-black italic uppercase">Tesla</h1>
-            <button onclick="location.reload()" class="w-12 h-12 rounded-2xl bg-white border flex items-center justify-center text-zinc-300"><i class="fa-solid fa-power-off"></i></button>
+    <div id="main-app" class="hidden pb-24">
+        <header class="p-6 flex justify-between items-center">
+            <h1 class="text-xl font-black italic uppercase">Tesla Angola</h1>
+            <button onclick="location.reload()" class="w-10 h-10 rounded-xl bg-white border flex items-center justify-center text-red-500 shadow-sm"><i class="fa-solid fa-power-off"></i></button>
         </header>
 
-        <main id="view-home" class="view-section px-6 space-y-6">
-            <div class="glass-card rounded-[3rem] p-10 text-center border-t-8 border-tesla-orange">
-                <p class="text-zinc-400 text-[10px] uppercase font-black mb-3">Saldo Disponível</p>
-                <h2 class="text-5xl font-black text-zinc-900"><span id="main-balance">0.00</span> <span class="text-lg tesla-orange">Kz</span></h2>
+        <div id="view-home" class="view-section px-5 space-y-4">
+            <div class="glass-card rounded-[2.5rem] p-8 text-center border-t-4 border-tesla-orange">
+                <p class="text-zinc-400 text-[10px] uppercase font-black">Saldo Disponível</p>
+                <h2 class="text-4xl font-black text-zinc-900"><span id="main-balance">0.00</span> <small class="text-sm tesla-orange italic">Kz</small></h2>
             </div>
-            <div class="grid grid-cols-2 gap-4">
-                <button id="open-dep" class="bg-tesla-orange text-white py-7 rounded-[2rem] font-black text-[10px] uppercase shadow-lg italic">Depósito</button>
-                <button id="open-wit" class="glass-card py-7 rounded-[2rem] font-black text-[10px] uppercase italic text-zinc-600">Saque</button>
-            </div>
-        </main>
-
-        <div id="view-ganhos" class="view-section px-6 hidden">
-            <div class="glass-card rounded-[3rem] p-8 border-t-8 border-emerald-500 text-center">
-                <p class="text-zinc-400 text-[10px] uppercase font-black mb-2">Capital em Operação</p>
-                <h2 class="text-4xl font-black text-zinc-900 mb-8"><span id="mining-balance">0.00</span> <span class="text-base tesla-orange">Kz</span></h2>
-                <button id="btn-collect-manual" class="w-full bg-emerald-500 text-white py-5 rounded-2xl font-black text-[11px] uppercase mb-8">Receber Lucro (5%)</button>
-                <input type="number" id="activate-amount" placeholder="Valor para Investir" class="w-full p-5 glass-input border rounded-2xl mb-4">
-                <button id="btn-invest" class="w-full bg-zinc-900 text-white py-5 rounded-2xl font-black text-[10px] uppercase">Ativar Investimento</button>
+            <div class="grid grid-cols-2 gap-3">
+                <button id="open-dep" class="bg-tesla-orange text-white py-5 rounded-2xl font-black text-[10px] uppercase italic shadow-md">Depósito</button>
+                <button id="open-wit" class="glass-card py-5 rounded-2xl font-black text-[10px] uppercase italic text-zinc-600 border border-zinc-100 shadow-sm">Saque</button>
             </div>
         </div>
 
-        <div id="view-equipa" class="view-section px-6 hidden">
-            <div class="glass-card rounded-[2.5rem] p-8 text-center">
-                <h3 class="font-black uppercase text-[11px] text-zinc-400 mb-6 italic">Link de Convite (10%)</h3>
-                <input type="text" id="invite-link" readonly class="w-full p-5 bg-zinc-50 rounded-2xl text-[10px] font-bold text-center mb-5 border">
-                <button id="btn-copy" class="w-full bg-zinc-900 text-white py-5 rounded-2xl font-black text-[10px] uppercase">Copiar Link</button>
+        <div id="view-ganhos" class="view-section px-5 hidden">
+            <div class="glass-card rounded-[2rem] p-6 text-center">
+                <p class="text-[10px] font-black uppercase text-zinc-400">Investimento Ativo</p>
+                <h2 class="text-3xl font-black mb-4"><span id="mining-balance">0.00</span> Kz</h2>
+                <button id="btn-collect-manual" class="w-full bg-emerald-500 text-white py-4 rounded-xl font-black text-[10px] uppercase mb-4 shadow-sm">Receber Lucro Diário (5%)</button>
+                <hr class="mb-4">
+                <input type="number" id="activate-amount" placeholder="Valor a Investir" class="w-full p-4 bg-zinc-50 border rounded-xl mb-3 text-center font-bold">
+                <button id="btn-invest" class="w-full bg-zinc-900 text-white py-4 rounded-xl font-black text-[10px] uppercase shadow-md">Ativar Novo Plano</button>
             </div>
         </div>
 
-        <div id="view-extrato" class="view-section px-6 hidden">
-            <h3 class="font-black uppercase text-[14px] italic mb-8">Histórico</h3>
-            <div id="transaction-list" class="space-y-4"></div>
+        <div id="view-equipa" class="view-section px-5 hidden">
+            <div class="glass-card rounded-[2rem] p-6 text-center">
+                <p class="text-[10px] font-black uppercase text-zinc-400 mb-4">Seu Link de Convite</p>
+                <input type="text" id="invite-link" readonly class="w-full p-4 bg-zinc-50 rounded-xl text-[10px] font-bold text-center mb-4 border">
+                <button id="btn-copy" class="w-full bg-zinc-900 text-white py-4 rounded-xl font-black text-[10px] uppercase shadow-md">Copiar Link</button>
+            </div>
         </div>
 
-        <nav class="fixed bottom-0 left-0 right-0 bg-zinc-900 px-6 py-6 flex justify-around items-center z-50 rounded-t-[3rem]">
-            <button id="nav-home" class="flex flex-col items-center gap-1 text-zinc-500"><i class="fa-solid fa-house"></i><span class="text-[8px] font-black uppercase">Painel</span></button>
-            <button id="nav-ganhos" class="flex flex-col items-center gap-1 text-zinc-500"><i class="fa-solid fa-chart-line"></i><span class="text-[8px] font-black uppercase">Ganhos</span></button>
-            <button id="nav-equipa" class="flex flex-col items-center gap-1 text-zinc-500"><i class="fa-solid fa-users"></i><span class="text-[8px] font-black uppercase">Equipa</span></button>
-            <button id="nav-extrato" class="flex flex-col items-center gap-1 text-zinc-500"><i class="fa-solid fa-list"></i><span class="text-[8px] font-black uppercase">Extrato</span></button>
+        <div id="view-extrato" class="view-section px-5 hidden">
+            <h3 class="font-black uppercase text-sm mb-4 italic">Histórico de Transações</h3>
+            <div id="transaction-list" class="space-y-2"></div>
+        </div>
+
+        <nav class="fixed bottom-0 left-0 right-0 bg-zinc-900 p-4 flex justify-around items-center z-50 rounded-t-[2rem] shadow-2xl">
+            <button id="nav-home" class="flex flex-col items-center text-zinc-500"><i class="fa-solid fa-house"></i><span class="text-[8px] font-bold mt-1">HOME</span></button>
+            <button id="nav-ganhos" class="flex flex-col items-center text-zinc-500"><i class="fa-solid fa-bolt"></i><span class="text-[8px] font-bold mt-1">PLANOS</span></button>
+            <button id="nav-equipa" class="flex flex-col items-center text-zinc-500"><i class="fa-solid fa-users"></i><span class="text-[8px] font-bold mt-1">EQUIPA</span></button>
+            <button id="nav-extrato" class="flex flex-col items-center text-zinc-500"><i class="fa-solid fa-receipt"></i><span class="text-[8px] font-bold mt-1">EXTRATO</span></button>
         </nav>
     </div>
 
-    <div id="modal-container" class="fixed inset-0 bg-black/90 z-[100] hidden flex items-center justify-center p-6 backdrop-blur-sm">
-        <div class="w-full max-w-sm bg-white rounded-[3rem] p-10 text-center" id="modal-content"></div>
+    <div id="modal-container" class="fixed inset-0 bg-black/80 z-[100] hidden flex items-center justify-center p-6 backdrop-blur-sm">
+        <div class="w-full max-w-sm bg-white rounded-[2rem] p-8 text-center shadow-2xl" id="modal-content"></div>
     </div>
 
     <script type="module">
@@ -125,28 +118,29 @@
         let tempProof = "";
 
         const notify = (m, type="success") => {
-            const c = document.getElementById("notification-container");
-            const d = document.createElement("div");
-            d.className = "notification";
-            if(type === "error") d.style.borderLeftColor = "red";
-            d.innerHTML = m;
-            c.appendChild(d);
-            setTimeout(() => d.remove(), 3000);
+            const container = document.getElementById("notification-container");
+            const div = document.createElement("div");
+            div.className = "notification shadow-lg";
+            if(type === "error") div.style.borderLeftColor = "red";
+            div.innerText = m;
+            container.appendChild(div);
+            setTimeout(() => div.remove(), 3000);
         };
 
+        // LOGIN E REGISTO
         document.getElementById("auth-main-btn").onclick = async () => {
             const phone = document.getElementById("auth-contact").value.trim();
             const pass = document.getElementById("auth-pass").value.trim();
-            if(!phone || !pass) return notify("Dados incompletos", "error");
+            if(!phone || !pass) return notify("Campos vazios!", "error");
+
             const uRef = ref(db, "users/" + phone);
             try {
                 const snap = await get(uRef);
                 if(authMode === "register") {
-                    if(snap.exists()) return notify("Já existe", "error");
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const referrer = urlParams.get('ref') || "direto";
-                    await set(uRef, { phone, pass, balance: 500, mining: 0, lastCollect: "", invitedBy: referrer });
-                    notify("Registo ok!"); document.getElementById("tab-login").click();
+                    if(snap.exists()) return notify("Número já em uso!", "error");
+                    const refParam = new URLSearchParams(window.location.search).get('ref') || "direto";
+                    await set(uRef, { phone, pass, balance: 500, mining: 0, lastCollect: "", invitedBy: refParam });
+                    notify("Registo concluído!"); document.getElementById("tab-login").click();
                 } else {
                     if(snap.exists() && snap.val().pass === pass) {
                         userLogged = phone;
@@ -161,137 +155,167 @@
                         });
                         loadHistory();
                         document.getElementById("nav-home").click();
-                    } else notify("Erro de login", "error");
+                    } else notify("Número ou Senha errados!", "error");
                 }
-            } catch(e) { console.error(e); }
+            } catch(e) { notify("Erro de conexão", "error"); }
         };
 
+        // HISTÓRICO
+        function loadHistory() {
+            onValue(ref(db, "transactions"), snap => {
+                const box = document.getElementById("transaction-list");
+                box.innerHTML = "";
+                if(snap.exists()){
+                    const txs = Object.values(snap.val()).filter(t => t.user === userLogged).reverse();
+                    txs.slice(0, 20).forEach(t => {
+                        let cor = t.status === "CONCLUÍDO" || t.status === "APROVADO" ? "text-emerald-500" : "text-orange-500";
+                        box.innerHTML += `<div class="glass-card p-4 rounded-xl flex justify-between items-center text-[10px] border-l-4 border-zinc-100">
+                            <div><b class="uppercase">${t.tipo}</b><br><span class="opacity-40">${t.data}</span></div>
+                            <div class="text-right"><b>${t.valor.toFixed(2)} Kz</b><br><span class="${cor} font-black">${t.status}</span></div>
+                        </div>`;
+                    });
+                }
+            });
+        }
+
+        // DEPOSITO
         document.getElementById("open-dep").onclick = () => {
             tempProof = "";
-            document.getElementById("modal-container").classList.remove("hidden");
+            const modal = document.getElementById("modal-container");
+            modal.classList.remove("hidden");
             document.getElementById("modal-content").innerHTML = `
-                <h3 class="text-xl font-black mb-4 uppercase tesla-orange">Depósito</h3>
-                <div class="bg-zinc-50 p-4 rounded-xl text-left text-[10px] mb-4 border">
-                    <p>BFA IBAN 1: <b>0006 0000 2870 9134 3015 1</b></p>
-                    <p class="mt-2">BAI IBAN 2: <b>0040 0000 0927 0667 1014 1</b></p>
+                <h3 class="font-black mb-3 tesla-orange uppercase italic">Depósito</h3>
+                <div class="bg-zinc-50 p-3 rounded-lg text-left text-[9px] mb-4 border border-zinc-100">
+                    <p>BFA: <b>0006 0000 2870 9134 3015 1</b></p>
+                    <p class="mt-1">BAI: <b>0040 0000 0927 0667 1014 1</b></p>
                 </div>
-                <input type="number" id="val-dep" placeholder="Valor Kz" class="w-full p-4 glass-input rounded-xl mb-4 border">
-                <input type="file" id="input-file" accept="image/*" class="mb-4 text-[10px]">
-                <button id="final-dep" class="w-full bg-tesla-orange text-white py-4 rounded-xl font-black uppercase">Enviar Prova</button>
-                <button onclick="document.getElementById('modal-container').classList.add('hidden')" class="mt-4 text-[10px] uppercase opacity-50">Fechar</button>
+                <input type="number" id="val-dep" placeholder="Valor Kz" class="w-full p-4 bg-zinc-50 border rounded-xl mb-3 text-center font-bold">
+                <input type="file" id="input-file" accept="image/*" class="text-[10px] mb-4 w-full">
+                <button id="final-dep" class="w-full bg-tesla-orange text-white py-4 rounded-xl font-black uppercase shadow-md">Confirmar Envio</button>
+                <button onclick="document.getElementById('modal-container').classList.add('hidden')" class="mt-3 text-[10px] opacity-40 font-bold uppercase">Fechar</button>
             `;
             document.getElementById("input-file").onchange = (e) => {
                 const reader = new FileReader();
-                reader.onload = (ev) => tempProof = ev.target.result;
-                if(e.target.files[0]) reader.readAsDataURL(e.target.files[0]);
+                reader.onload = (ev) => { tempProof = ev.target.result; notify("Foto carregada!"); };
+                reader.readAsDataURL(e.target.files[0]);
             };
             document.getElementById("final-dep").onclick = async () => {
                 const v = document.getElementById("val-dep").value;
                 if(!v || !tempProof) return notify("Falta valor ou foto", "error");
                 await push(ref(db, "transactions"), { user: userLogged, valor: parseFloat(v), tipo: "DEPÓSITO", status: "PENDENTE", comprovante: tempProof, data: new Date().toLocaleString() });
-                notify("Enviado!"); document.getElementById("modal-container").classList.add("hidden");
+                modal.classList.add("hidden"); notify("Enviado para análise");
             };
         };
 
-        // SAQUE CORRIGIDO (ENVIA IBAN E TRAVA 200KZ)
+        // SAQUE (CORRIGIDO PARA ENVIAR IBAN)
         document.getElementById("open-wit").onclick = () => {
-            document.getElementById("modal-container").classList.remove("hidden");
+            const modal = document.getElementById("modal-container");
+            modal.classList.remove("hidden");
             document.getElementById("modal-content").innerHTML = `
-                <h3 class="text-xl font-black mb-4 uppercase tesla-orange">Saque</h3>
-                <p class="text-[9px] text-red-500 mb-4 font-bold italic">Mínimo: 200 Kz</p>
-                <input type="text" id="iban-wit" placeholder="Seu IBAN" class="w-full p-4 glass-input rounded-xl mb-4 border">
-                <input type="number" id="val-wit" placeholder="Valor Kz" class="w-full p-4 glass-input rounded-xl mb-4 border">
-                <button id="final-wit" class="w-full bg-tesla-orange text-white py-4 rounded-xl font-black uppercase">Pedir Saque</button>
-                <button onclick="document.getElementById('modal-container').classList.add('hidden')" class="mt-4 text-[10px] uppercase opacity-50">Fechar</button>
+                <h3 class="font-black mb-3 uppercase italic text-zinc-800">Sacar Saldo</h3>
+                <input type="text" id="iban-wit" placeholder="Seu IBAN" class="w-full p-4 bg-zinc-50 border rounded-xl mb-3 text-center font-bold">
+                <input type="number" id="val-wit" placeholder="Valor em Kz" class="w-full p-4 bg-zinc-50 border rounded-xl mb-4 text-center font-bold">
+                <button id="final-wit" class="w-full bg-zinc-900 text-white py-4 rounded-xl font-black uppercase shadow-md">Solicitar Saque</button>
+                <button onclick="document.getElementById('modal-container').classList.add('hidden')" class="mt-3 text-[10px] opacity-40 font-bold uppercase">Cancelar</button>
             `;
             document.getElementById("final-wit").onclick = async () => {
                 const v = parseFloat(document.getElementById("val-wit").value);
-                const iban = document.getElementById("iban-wit").value.trim();
+                const iban = document.getElementById("iban-wit").value.trim(); // CAPTURA O IBAN
                 
-                if(!v || v < 200) return notify("Mínimo 200 Kz", "error");
-                if(!iban) return notify("IBAN obrigatório", "error");
-
+                if(!iban || iban.length < 5) return notify("Insira um IBAN válido!", "error");
+                if(!v || v < 200) return notify("Saque mínimo: 200 Kz", "error");
+                
                 const snap = await get(ref(db, "users/" + userLogged));
-                if(snap.val().balance < v) return notify("Saldo insuficiente", "error");
+                const d = snap.val();
+                if(d.balance < v) return notify("Saldo insuficiente", "error");
 
-                await update(ref(db, "users/" + userLogged), { balance: snap.val().balance - v });
-                // IMPORTANTE: Salvando o IBAN dentro da transação para o Admin ver
+                // Deduz saldo e envia transação com IBAN
+                await update(ref(db, "users/" + userLogged), { balance: d.balance - v });
                 await push(ref(db, "transactions"), { 
                     user: userLogged, 
                     valor: v, 
-                    iban: iban, 
+                    iban: iban, // AQUI ENVIA O IBAN PARA O ADMIN
                     tipo: "SAQUE", 
                     status: "PENDENTE", 
                     data: new Date().toLocaleString() 
                 });
-                notify("Saque pedido!"); document.getElementById("modal-container").classList.add("hidden");
+                
+                modal.classList.add("hidden"); 
+                notify("Pedido de saque enviado");
             };
         };
 
-        const navs = ["home", "ganhos", "equipa", "extrato"];
-        navs.forEach(n => {
-            document.getElementById("nav-"+n).onclick = () => {
-                navs.forEach(x => {
-                    document.getElementById("view-"+x).classList.add("hidden");
-                    document.getElementById("nav-"+x).className = "flex flex-col items-center gap-1 text-zinc-500";
-                });
-                document.getElementById("view-"+n).classList.remove("hidden");
-                document.getElementById("nav-"+n).className = "flex flex-col items-center gap-1 tesla-orange";
-            };
-        });
-
+        // RECOLHER RENDA
         document.getElementById("btn-collect-manual").onclick = async () => {
             const snap = await get(ref(db, "users/" + userLogged));
             const d = snap.val();
             const today = new Date().toLocaleDateString();
-            if(d.lastCollect === today) return notify("Já recebeu hoje!", "error");
-            if(!d.mining || d.mining <= 0) return notify("Sem capital", "error");
+            
+            if(d.lastCollect === today) return notify("Você já recebeu hoje!", "error");
+            if(!d.mining || d.mining <= 0) return notify("Ative um plano primeiro", "error");
+            
             const lucro = d.mining * 0.05;
             await update(ref(db, "users/" + userLogged), { balance: d.balance + lucro, lastCollect: today });
-            notify("Ganhou " + lucro.toFixed(2) + " Kz");
+            await push(ref(db, "transactions"), { 
+                user: userLogged, valor: lucro, tipo: "RENDA DIÁRIA", status: "CONCLUÍDO", data: new Date().toLocaleString() 
+            });
+            notify("Lucro de " + lucro.toFixed(2) + " Kz recebido!");
         };
 
+        // INVESTIR
         document.getElementById("btn-invest").onclick = async () => {
             const v = parseFloat(document.getElementById("activate-amount").value);
-            if(!v || v < 100) return notify("Mínimo 100 Kz", "error");
-            const snap = await get(ref(db, "users/" + userLogged));
-            if(snap.val().balance < v) return notify("Sem saldo", "error");
-            await update(ref(db, "users/" + userLogged), { balance: snap.val().balance - v, mining: (snap.val().mining || 0) + v });
-            notify("Investido!"); document.getElementById("activate-amount").value = "";
-        };
+            if(!v || v < 100) return notify("Mínimo: 100 Kz", "error");
+            
+            const uRef = ref(db, "users/" + userLogged);
+            const snap = await get(uRef);
+            const d = snap.val();
+            
+            if(d.balance < v) return notify("Saldo insuficiente", "error");
 
-        const loadHistory = () => {
-            onValue(ref(db, "transactions"), s => {
-                const box = document.getElementById("transaction-list");
-                box.innerHTML = "";
-                if(s.exists()){
-                    Object.values(s.val()).reverse().forEach(t => {
-                        if(t.user === userLogged){
-                            const div = document.createElement("div");
-                            div.className = "glass-card p-4 rounded-2xl flex justify-between items-center text-[10px]";
-                            div.innerHTML = `<div><b>${t.tipo}</b><br><small>${t.data}</small></div><div class="text-right"><b>${(t.valor || 0).toFixed(2)} Kz</b><br><span class="text-orange-500">${t.status}</span></div>`;
-                            box.appendChild(div);
-                        }
+            await update(uRef, { balance: d.balance - v, mining: (d.mining || 0) + v });
+            await push(ref(db, "transactions"), { user: userLogged, valor: v, tipo: "INVESTIMENTO", status: "CONCLUÍDO", data: new Date().toLocaleString() });
+
+            if(d.invitedBy && d.invitedBy !== "direto") {
+                const pRef = ref(db, "users/" + d.invitedBy);
+                const pSnap = await get(pRef);
+                if(pSnap.exists()){
+                    const bonus = v * 0.10;
+                    await update(pRef, { balance: (pSnap.val().balance || 0) + bonus });
+                    await push(ref(db, "transactions"), { 
+                        user: d.invitedBy, valor: bonus, tipo: "BÓNUS REFERÊNCIA", status: "CONCLUÍDO", data: new Date().toLocaleString() + " (Ref: " + userLogged + ")" 
                     });
                 }
-            });
+            }
+            notify("Plano ativado!");
+            document.getElementById("activate-amount").value = "";
         };
 
+        // NAV E TABS
+        const navs = ["home", "ganhos", "equipa", "extrato"];
+        navs.forEach(n => {
+            document.getElementById("nav-"+n).onclick = () => {
+                navs.forEach(x => { document.getElementById("view-"+x).classList.add("hidden"); document.getElementById("nav-"+x).className = "flex flex-col items-center text-zinc-500"; });
+                document.getElementById("view-"+n).classList.remove("hidden");
+                document.getElementById("nav-"+n).className = "flex flex-col items-center tesla-orange font-bold";
+            };
+        });
+
         document.getElementById("btn-copy").onclick = () => {
-            document.getElementById("invite-link").select();
-            document.execCommand("copy"); notify("Copiado!");
+            const link = document.getElementById("invite-link"); link.select();
+            document.execCommand("copy"); notify("Link copiado!");
         };
 
         document.getElementById("tab-login").onclick = () => {
             authMode = "login"; document.getElementById("confirm-pass-container").classList.add("hidden");
-            document.getElementById("tab-login").className = "flex-1 py-5 auth-tab-active text-[10px] uppercase";
-            document.getElementById("tab-register").className = "flex-1 py-5 text-zinc-400 font-bold text-[10px] uppercase";
+            document.getElementById("tab-login").className = "flex-1 py-4 auth-tab-active text-[10px] uppercase";
+            document.getElementById("tab-register").className = "flex-1 py-4 text-zinc-400 font-bold text-[10px] uppercase";
         };
         document.getElementById("tab-register").onclick = () => {
             authMode = "register"; document.getElementById("confirm-pass-container").classList.remove("hidden");
-            document.getElementById("tab-register").className = "flex-1 py-5 auth-tab-active text-[10px] uppercase";
-            document.getElementById("tab-login").className = "flex-1 py-5 text-zinc-400 font-bold text-[10px] uppercase";
+            document.getElementById("tab-register").className = "flex-1 py-4 auth-tab-active text-[10px] uppercase";
+            document.getElementById("tab-login").className = "flex-1 py-4 text-zinc-400 font-bold text-[10px] uppercase";
         };
     </script>
-</body>
-  </html>
+                                                                                                                             </body>
+                                                                                                                             
